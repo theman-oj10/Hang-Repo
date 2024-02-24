@@ -1,0 +1,16 @@
+airportlounges
+beachbars
+beerbar
+champagne_bars
+cocktailbars
+divebars
+gaybars
+irish_pubs
+lounges
+pubs
+speakeasies
+sportsbars
+tikibars
+vermouthbars
+whiskeybars
+wine_bars

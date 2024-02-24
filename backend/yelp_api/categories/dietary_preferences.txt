@@ -1,0 +1,5 @@
+beer_and_wine
+gluten_free
+halal
+vegan
+vegetarian
