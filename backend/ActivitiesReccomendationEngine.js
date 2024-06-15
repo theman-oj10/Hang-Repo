@@ -29,15 +29,12 @@ class ActivityRecommendationEngine {
     // Calculate score for an activity based on user's preferences
     calculateScore(user, activity) {
         let score = 0;
-
         // Increase score if activity's topic matches user's preferred topic
         if (user.activityPref === activity.topic) {
             score += 1;
         }
-
         // Increase score if activity's rating is high
         score += activity.rating;
-
         return score;
     }
 
@@ -51,9 +48,7 @@ class ActivityRecommendationEngine {
             activity: activity,
             score: this.calculateScore(user, activity)
         }));
-
-        
-
+ 
         // Give -1 score to activities that contain 'restaurant' or 'bar' in their activity categories
         scores.forEach(score => {
             if (score.activity.activityCategories.includes('restaurant') || score.activity.activityCategories.includes('bar')) {

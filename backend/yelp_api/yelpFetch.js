@@ -6,7 +6,7 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-dotenv.config({ path: __dirname + '/../Credentials.env' });
+dotenv.config({ path: __dirname + '/../.env' });
 // const latitude = '1.3088';
 // const longitude = '103.8564';
 const apikey = process.env.YELP_API_KEY;
@@ -29,11 +29,11 @@ function dateToUnix(date) {
     }
 }
 export default function locationSearch(latitude, longitude, radius, category, prefPrice, prefDateTime) {
-  const apikey = process.env.YELP_API_KEY;
   let priceRange = [1,2,3,4]
   priceRange = priceRange.slice(0, prefPrice);
   priceRange = priceRange.join(',');
   const url = `https://api.yelp.com/v3/businesses/search`;
+  console.log('category:', category);
   const options = {
     headers: {
       Authorization: `Bearer ${apikey}`,
@@ -71,7 +71,7 @@ export default function locationSearch(latitude, longitude, radius, category, pr
 }
 
 function secondaryLocationSearch(latitude, longitude, radius, category, prefPrice) {
-  const apikey = process.env.YELP_API_KEY;
+  console.log('Secondary search', category);
   let priceRange = [1,2,3,4]
   priceRange = priceRange.slice(0, prefPrice);
   priceRange = priceRange.join(',');

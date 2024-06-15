@@ -6,7 +6,7 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-dotenv.config({ path: __dirname + '/../Credentials.env' });
+dotenv.config({ path: __dirname + '/../.env' });
 const apikey = process.env.YELP_API_KEY;
 let url = 'https://api.yelp.com/v3/businesses/search';
 let headers = { Authorization: `Bearer ${apikey}` };  // replace `${apiKey}` with your actual Yelp API key

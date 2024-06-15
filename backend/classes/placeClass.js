@@ -32,22 +32,28 @@ export class Restaurant extends Place {
         this.alcoholOptions = [];
         // go through each category, if category is in restaurants.json, add it to cuisines, else add it to foods, if in special add to special
         placeData.categories.forEach(category => {
-            if (dietPrefList.includes(category.alias)) {
-                this.dietPref.push(category.alias);
+        const alias = category.alias;
+        if (isDietaryAliasPresent(alias)) {
+            const name = getDietaryNameByAlias(alias);
+            if (name) {
+            this.dietPref.push(name);
             }
-            else if (cuisinesList.includes(category.alias)) {
-                this.cuisines.push(category.alias);
+        } else if (isCuisineAliasPresent(alias)) {
+            const name = getCuisineNameByAlias(alias);
+            if (name) {
+            this.cuisines.push(name);
             }
-            else if (foodItemsList.includes(category.alias)) {
-                this.foodItems.push(category.alias);
+        } else if (isFavFoodAliasPresent(alias)) {
+            const name = getFavFoodNameByAlias(alias);
+            if (name) {
+            this.foodItems.push(name);
             }
-            else if (specialFoodList.includes(category.alias)) {
-                this.specialCategory.push(category.alias);
-            }
-            else if (alcoholList.includes(category.alias)) {
-                this.alcoholOptions.push(category.alias);
-            }
-        });
+        } else if (isSpecialFoodAliasPresent(alias)) {
+            this.specialCategory.push(alias);
+        } else if (isAlcoholAliasPresent(alias)) {
+            this.alcoholOptions.push(alias);
+        }
+    });
     }
 }
 
@@ -82,167 +88,4 @@ export class Activity extends Place {
         return topics; 
     }
 }
-const alcoholList = [
-    'airportlounges',
-    'beachbars',
-    'beerbar',
-    'champagne_bars',
-    'cocktailbars',
-    'divebars',
-    'gaybars',
-    'irish_pubs',
-    'lounges',
-    'pubs',
-    'speakeasies',
-    'sportsbars',
-    'tikibars',
-    'vermouthbars',
-    'whiskeybars',
-    'wine_bars'
-];
 
-let dietPrefList = ['gluten_free', 'halal', 'vegan', 'vegetarian'];
-
-let cuisinesList = [
-    'afghani',
-    'african',
-    'arabian',
-    'argentine',
-    'asianfusion',
-    'australian',
-    'austrian',
-    'bangladeshi',
-    'bbq',
-    'belgian',
-    'brasseries',
-    'brazilian',
-    'british',
-    'burgers',
-    'burmese',
-    'cambodian',
-    'caribbean',
-    'chickenshop',
-    'chinese',
-    'dumplings',
-    'filipino',
-    'fishnchips',
-    'fondue',
-    'food_court',
-    'foodstands',
-    'french',
-    'gamemeat',
-    'gastropubs',
-    'german',
-    'greek',
-    'guamanian',
-    'hawaiian',
-    'himalayan',
-    'honduran',
-    'hotdogs', //fastfood
-    'hotpot',
-    'hungarian',
-    'indonesian',
-    'indpak',
-    'international',
-    'irish',
-    'italian',
-    'japanese',
-    'kebab',
-    'kopitiam',
-    'korean',
-    'kosher',
-    'laotian',
-    'latin',
-    'malaysian',
-    'mediterranean',
-    'mexican',
-    'mideastern',
-    'modern_european',
-    'mongolian',
-    'moroccan',
-    'nicaraguan',
-    'noodles',
-    'pakistani',
-    'panasian',
-    'persian',
-    'portuguese',
-    'raw_food',
-    'russian',
-    'scandinavian',
-    'seafood',
-    'singaporean',
-    'soup',
-    'spanish',
-    'srilankan',
-    'syrian',
-    'taiwanese',
-    'tapasmallplates',
-    'tex-mex',
-    'thai',
-    'tradamerican',
-    'turkish',
-    'ukrainian',
-    'venison',
-    'vietnamese'
-];
-
-let foodItemsList = [
-    'acaibowls',
-    'bagels',
-    'bubbletea',
-    'chicken_wings',
-    'coffee',
-    'cupcakes',
-    'donuts',
-    'gelato',
-    'nasilemak',
-    'pizza',
-    'poke',
-    'hotdog',
-    'icecream',
-    'salad',
-    'sandwiches',
-    'shavedice',
-    'shavedsnow',
-    'tea',
-    'waffles',
-    'steak',
-    'sushi',
-    'soup',
-    'fishnchips',
-    'burgers',
-    'dumplings',
-    'fondue'
-];
-
-let specialFoodList = [
-    'bakeries',
-    'breweries',
-    'cakeshop',
-    'cideries',
-    'coffeeroasteries',
-    'customcakes',
-    'delicatessen',
-    'desserts',
-    'distilleries',
-    'diyfood',
-    'gourmet',
-    'importedfood',
-    'internetcafe',
-    'intlgrocery',
-    'juicebars',
-    'smokehouse',
-    'streetvendors',
-    'bistros',
-    'breakfast_brunch',
-    'buffets',
-    'popuprestaurants',
-    'creperies',
-    'delis',
-    'diners',
-    'dinnertheater',
-    'farmersmarket',
-    'grocery',
-    'hawkercentre',
-    'organic_stores'
-];
