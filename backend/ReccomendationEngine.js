@@ -1,6 +1,7 @@
 import locationSearch from './yelp_api/yelpFetch.js';
 import { User } from './classes/userClass.js';
 import { Restaurant } from './classes/placeClass.js';
+import { isDietaryAliasPresent, isCuisineAliasPresent, getDietaryAliasByName, getCuisineAliasByName } from './yelp_api/categories.js';
 
 const latitude = '1.3088';
 const longitude = '103.8564';
@@ -38,6 +39,10 @@ class RecommendationEngine {
             score += 3;
         }
 
+        if (place.price <= preferredSpend) {
+            score += 3;
+        }
+
         // Increase score if place's rating is high
         score += place.rating;
 
@@ -68,9 +73,9 @@ const exampleUser = new User({
     userName: "johndoe123",
     age: 25,
     gender: "male",
-    dietPref: ['vegetarian'],
+    dietPref: ['Vegetarian'],
     alcohol: false,
-    cuisines: ["indian"],
+    cuisines: ["Indian"],
     favFood: [],
     specialCategory: [],
 });
@@ -78,55 +83,65 @@ const exampleUser = new User({
 /* user -> extract relevant categories -> locationSearch 
 -> Find intersection of categories -> reccomendation engine -> return top 3 */
 
-export function categorySearch(user, preferredSpend, preferredDate) {
-    let dietCategories = user.dietPref;
-    let dietPrefMap = {};
-    // if there are dietary preferences
-    if (dietCategories != null) {
-        let validDietCategories = dietCategories.filter(category => isDietaryAliasPresent(category)); // removes invalid diet categories
-        if (validDietCategories.length === 0) {
-            return("No valid dietary preferences found");
-        }
-        validDietCategories.map(category => {
-        dietPrefMap[category] = locationSearch(latitude, longitude, radius, category, preferredSpend, preferredDate)
-            .then(restaurants => restaurants.map(restaurant => new Restaurant(restaurant)));
-    });
-    return Promise.all(Object.values(dietPrefMap)).then(results => {
-        // Find intersection of categories
-        const dietPrefFiltered = results.reduce((common, current) => {
-            return common.filter(element => current.some(otherElement => element.equals(otherElement)));
-        }, results[0]);  // initialize with the first array
-       //console.log(`Intersection of categories: ${dietPrefFiltered}`);
-        if (dietPrefFiltered.length === 0) {
-            return("No restaurants found");
-        } else {
-            const reccomendationEngine = new RecommendationEngine(user, dietPrefFiltered);
-            return reccomendationEngine.recommend(user);
-        }
-    });}
-    // if there are no dietary preferences
-    else {
-        let validCuisines = user.cuisines.filter(cuisine => isCuisineAliasPresent(cuisine)); // removes invalid cuisines
-        if (validCuisines.length === 0) {
-            return("No valid cuisines found");
-        }
-        // put all user.cusines as a string
-        const cuisinesString = validCuisines.join(',');
-        const searchResults = locationSearch(latitude, longitude, radius, cuisinesString, preferredSpend, preferredDate)
-    .then(restaurants => {
-        //console.log(restaurants);
-        return restaurants.map(restaurant => new Restaurant(restaurant));
-    })
-    .then(restaurants => {
-        if (restaurants.length === 0) {
-            return("No restaurants found");
-        } else {
-            const reccomendationEngine = new RecommendationEngine(user, restaurants);
-            return reccomendationEngine.recommend(user);
-        }
-    });
-    return searchResults;
+// categories will always be stores as names and frontend will work with names, so you need to convert to aliases
+export async function categorySearch(user, preferredSpend, preferredDate) {
+    if (user.dietPref && user.dietPref.length > 0) {
+        return dietPrefSearch(user, preferredSpend, preferredDate);
+    } else {
+        return cuisineSearch(user, preferredSpend, preferredDate);
     }
 }
-categorySearch(exampleUser, preferredSpend, preferredDate)
-.then(result => {console.log(result);});    
+
+
+async function dietPrefSearch(user, preferredSpend, preferredDate) {
+    let dietCategories = user.dietPref.map(category => getDietaryAliasByName(category)).filter(Boolean); // convert to alias
+    let dietPrefMap = {};
+
+    if (dietCategories.length > 0) {
+        let validDietCategories = dietCategories.filter(category => isDietaryAliasPresent(category)); // validate aliases
+        if (validDietCategories.length === 0) {
+            return "No valid dietary preferences found";
+        }
+        validDietCategories.forEach(category => {
+            dietPrefMap[category] = locationSearch(latitude, longitude, radius, category, preferredSpend, preferredDate)
+                .then(restaurants => restaurants.map(restaurant => new Restaurant(restaurant)));
+        });
+        return Promise.all(Object.values(dietPrefMap)).then(results => {
+            const dietPrefFiltered = results.reduce((common, current) => {
+                return common.filter(element => current.some(otherElement => element.equals(otherElement)));
+            }, results[0]);
+            if (dietPrefFiltered.length === 0) {
+                return "No restaurants found";
+            } else {
+                const recommendationEngine = new RecommendationEngine(user, dietPrefFiltered);
+                return recommendationEngine.recommend(user);
+            }
+        });
+    } else {
+        return "No valid dietary preferences found";
+    }
+}
+
+async function cuisineSearch(user, preferredSpend, preferredDate) {
+    let cuisines = user.cuisines.map(cuisine => getCuisineAliasByName(cuisine)).filter(Boolean);
+    let validCuisines = cuisines.filter(cuisine => isCuisineAliasPresent(cuisine));
+    if (validCuisines.length === 0) {
+        return "No valid cuisines found";
+    }
+    const cuisinesString = validCuisines.join(',');
+    return locationSearch(latitude, longitude, radius, cuisinesString, preferredSpend, preferredDate)
+        .then(restaurants => {
+            return restaurants.map(restaurant => new Restaurant(restaurant));
+        })
+        .then(restaurants => {
+            if (restaurants.length === 0) {
+                return "No restaurants found";
+            } else {
+                const recommendationEngine = new RecommendationEngine(user, restaurants);
+                return recommendationEngine.recommend(user);
+            }
+        });
+}
+
+// categorySearch(exampleUser, preferredSpend, preferredDate)
+// .then(result => {console.log(result);});    

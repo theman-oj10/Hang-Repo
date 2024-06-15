@@ -1,101 +1,195 @@
 // functions to access the data for better abstraction
 // there is no special categories here, implement?
-function getCuisineNameByAlias(alias) {
-  return cuisineOptions[alias] || null;
-}
-
-function getCuisineAliasByName(name) {
-  for (const [key, value] of Object.entries(cuisineOptions)) {
-    if (value === name) {
-      return key;
-    }
+export function getCuisineNameByAlias(alias) {
+    try {
+      return cuisineOptions[alias] || null;
+    } catch (error) {
+      console.error("Error occurred while getting cuisine name by alias:", error);
+      return null;
   }
-  return null;
 }
 
-function isCuisineAliasPresent(alias) {
-  return alias in cuisineOptions;
-}
-
-function getFavFoodNameByAlias(alias) {
-  return favFoodOptions[alias] || null;
-}
-
-function getFavFoodAliasByName(name) {
-  for (const [key, value] of Object.entries(favFoodOptions)) {
-    if (value === name) {
-      return key;
+export function getCuisineAliasByName(name) {
+  try {
+    for (const [key, value] of Object.entries(cuisineOptions)) {
+      if (value === name) {
+        return key;
+      }
     }
+    return null;
+  } catch (error) {
+    console.error("Error occurred while getting cuisine alias by name:", error);
+    return null;
   }
-  return null;
 }
 
-function isFavFoodAliasPresent(alias) {
-  return alias in favFoodOptions;
+export function isCuisineAliasPresent(alias) {
+  try {
+    return alias in cuisineOptions;
+  } catch (error) {
+    console.error("Error occurred while checking if cuisine alias is present:", error);
+    return false;
+  }
 }
 
-function getActivityNameByAlias(alias) {
-  return activityOptions[alias] || null;
+export function getFavFoodNameByAlias(alias) {
+  try {
+    return favFoodOptions[alias] || null;
+  } catch (error) {
+    console.error("Error occurred while getting favorite food name by alias:", error);
+    return null;
+  }
 }
 
-function getActivityAliasByName(name) {
-  for (const [key, value] of Object.entries(activityOptions)) {
-    if (value === name) {
-      return key;
+export function getFavFoodAliasByName(name) {
+  try {
+    for (const [key, value] of Object.entries(favFoodOptions)) {
+      if (value === name) {
+        return key;
+      }
     }
+    return null;
+  } catch (error) {
+    console.error("Error occurred while getting favorite food alias by name:", error);
+    return null;
   }
-  return null;
 }
 
-function isActivityAliasPresent(alias) {
-  return alias in activityOptions;
+export function isFavFoodAliasPresent(alias) {
+  try {
+    return alias in favFoodOptions;
+  } catch (error) {
+    console.error("Error occurred while checking if favorite food alias is present:", error);
+    return false;
+  }
 }
 
-function getDietaryNameByAlias(alias) {
-  return dietaryOptions[alias] || null;
+export function getActivityNameByAlias(alias) {
+  try {
+    return activityOptions[alias] || null;
+  } catch (error) {
+    console.error("Error occurred while getting activity name by alias:", error);
+    return null;
+  }
 }
 
-function getDietaryAliasByName(name) {
-  for (const [key, value] of Object.entries(dietaryOptions)) {
-    if (value === name) {
-      return key;
+export function getActivityAliasByName(name) {
+  try {
+    for (const [key, value] of Object.entries(activityOptions)) {
+      if (value === name) {
+        return key;
+      }
     }
+    return null;
+  } catch (error) {
+    console.error("Error occurred while getting activity alias by name:", error);
+    return null;
   }
-  return null;
 }
 
-function isDietaryAliasPresent(alias) {
-  return alias in dietaryOptions;
+export function isActivityAliasPresent(alias) {
+  try {
+    return alias in activityOptions;
+  } catch (error) {
+    console.error("Error occurred while checking if activity alias is present:", error);
+    return false;
+  }
 }
 
-function getSpecialFoodNameByAlias(alias) {
+export function getDietaryNameByAlias(alias) {
+  try {
+    return dietaryOptions[alias] || null;
+  } catch (error) {
+    console.error("Error occurred while getting dietary name by alias:", error);
+    return null;
+  }
+}
+
+export function getDietaryAliasByName(name) {
+  try {
+    for (const [key, value] of Object.entries(dietaryOptions)) {
+      if (value === name) {
+        return key;
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error("Error occurred while getting dietary alias by name:", error);
+    return null;
+  }
+}
+
+export function isDietaryAliasPresent(alias) {
+  try {
+    return alias in dietaryOptions;
+  } catch (error) {
+    console.error("Error occurred while checking if dietary alias is present:", error);
+    return false;
+  }
+}
+
+export function getSpecialFoodNameByAlias(alias) {
+  try {
     return specialFoodOptions[alias] || null;
+  } catch (error) {
+    console.error("Error occurred while getting special food name by alias:", error);
+    return null;
+  }
 }
 
-function getSpecialFoodAliasByName(name) {
+export function getSpecialFoodAliasByName(name) {
+  try {
     for (const [key, value] of Object.entries(specialFoodOptions)) {
-        if (value === name) {
-            return key;
-        }
+      if (value === name) {
+        return key;
+      }
     }
     return null;
+  } catch (error) {
+    console.error("Error occurred while getting special food alias by name:", error);
+    return null;
+  }
 }
 
-function isSpecialFoodAliasPresent(alias) {
+export function isSpecialFoodAliasPresent(alias) {
+  try {
     return alias in specialFoodOptions;
+  } catch (error) {
+    console.error("Error occurred while checking if special food alias is present:", error);
+    return false;
+  }
 }
 
-function getAlcoholNameByAlias(alias) {
+export function getAlcoholNameByAlias(alias) {
+  try {
     return alcoholOptions[alias] || null;
+  } catch (error) {
+    console.error("Error occurred while getting alcohol name by alias:", error);
+    return null;
+  }
 }
 
-function getAlcoholAliasByName(name) {
+export function getAlcoholAliasByName(name) {
+  try {
     for (const [key, value] of Object.entries(alcoholOptions)) {
-        if (value === name) {
-            return key;
-        }
+      if (value === name) {
+        return key;
+      }
     }
     return null;
+  } catch (error) {
+    console.error("Error occurred while getting alcohol alias by name:", error);
+    return null;
+  }
+}
+
+export function isAlcoholAliasPresent(alias) {
+  try {
+    return alias in alcoholOptions;
+  } catch (error) {
+    console.error("Error occurred while checking if alcohol alias is present:", error);
+    return false;
+  }
 }
 
 // Stores alias: Name pairs for the categories that Yelp API uses

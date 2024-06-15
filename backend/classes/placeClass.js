@@ -1,3 +1,4 @@
+import { isDietaryAliasPresent, isCuisineAliasPresent, getCuisineNameByAlias, isFavFoodAliasPresent, getFavFoodNameByAlias, getDietaryNameByAlias, getSpecialFoodNameByAlias, isSpecialFoodAliasPresent, isAlcoholAliasPresent, getAlcoholNameByAlias  } from '../yelp_api/categories.js';
 class Place {
     constructor(placeData) {
         this.id = placeData.id;
@@ -49,9 +50,15 @@ export class Restaurant extends Place {
             this.foodItems.push(name);
             }
         } else if (isSpecialFoodAliasPresent(alias)) {
-            this.specialCategory.push(alias);
+            const name = getSpecialFoodNameByAlias(alias);
+            if (name) {
+            this.foodItems.push(name);
+            }
         } else if (isAlcoholAliasPresent(alias)) {
-            this.alcoholOptions.push(alias);
+            const name = getAlcoholNameByAlias(alias);
+            if (name) {
+            this.alcoholOptions.push(name);
+            }
         }
     });
     }
@@ -64,7 +71,7 @@ export class Activity extends Place {
         this.activityTopics = this.groupCategories();
         // Additional properties specific to activities can be added here
     }
-
+    // Refactor this using data and functions from categories.js
     groupCategories() {
         const activityTopics = {
             outdoor: ['hiking', 'biking', 'parks', 'beaches', 'gardens'],
